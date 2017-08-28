@@ -1,21 +1,27 @@
 package com.silverhetch.horae;
 
 import com.silverhetch.horae.upnp.HoraeUPnPImpl;
+import javafx.fxml.FXMLLoader;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
 import org.fourthline.cling.UpnpServiceImpl;
 
-public class Application extends javafx.application.Application implements DeviceStatusListener{
+import java.util.Locale;
+import java.util.ResourceBundle;
+
+public class Application extends javafx.application.Application implements DeviceStatusListener {
     private final Horae horae;
+    private final Main main;
 
     public Application() {
-        this.horae = new HoraeImpl(new HoraeUPnPImpl(new UpnpServiceImpl()),this);
+        this.horae = new HoraeImpl(new HoraeUPnPImpl(new UpnpServiceImpl()), this);
+        this.main = new Main();
     }
 
     @Override
     public void onStatusChanged(DeviceStatus deviceStatus) {
-
+        main.onStatusChanged(deviceStatus);
     }
 
     @Override
@@ -32,7 +38,11 @@ public class Application extends javafx.application.Application implements Devic
 
     @Override
     public void start(Stage primaryStage) throws Exception {
-        primaryStage.setScene(new Scene(new StackPane(), 300, 300));
+        ResourceBundle bundle = ResourceBundle.getBundle("main", new Locale("zh"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/main.fxml"), bundle);
+        loader.setController(main);
+        Scene scene = new Scene(loader.load(), 300, 300);
+        primaryStage.setScene(scene);
         primaryStage.show();
     }
 
