@@ -1,5 +1,8 @@
 package com.silverhetch.horae;
 
+import com.silverhetch.horae.autoconnection.DeviceStatus;
+import com.silverhetch.horae.autoconnection.DeviceStatusListener;
+import javafx.application.Platform;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
@@ -7,7 +10,7 @@ import javafx.scene.control.Label;
 import java.net.URL;
 import java.util.ResourceBundle;
 
-public class Main implements Initializable,DeviceStatusListener {
+public class Main implements Initializable, DeviceStatusListener {
 
     @FXML
     private Label deviceRoleIndicator;
@@ -20,6 +23,6 @@ public class Main implements Initializable,DeviceStatusListener {
 
     @Override
     public void onStatusChanged(DeviceStatus deviceStatus) {
-        deviceRoleIndicator.setText(deviceStatus.isMaster()?bundle.getString("app.master"):bundle.getString("app.client"));
+        Platform.runLater(() -> deviceRoleIndicator.setText(deviceStatus.isMaster() ? bundle.getString("app.master") : bundle.getString("app.client")));
     }
 }

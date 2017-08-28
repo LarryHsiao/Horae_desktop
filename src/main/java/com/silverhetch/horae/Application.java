@@ -1,8 +1,9 @@
 package com.silverhetch.horae;
 
+import com.silverhetch.horae.autoconnection.DeviceStatus;
+import com.silverhetch.horae.autoconnection.DeviceStatusListener;
 import com.silverhetch.horae.upnp.HoraeUPnPImpl;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.fourthline.cling.UpnpServiceImpl;
