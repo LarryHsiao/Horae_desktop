@@ -1,34 +1,33 @@
 package com.silverhetch.horae;
 
-import com.silverhetch.horae.socket.MessageListener;
-import com.silverhetch.horae.socket.SocketConnectionImpl;
-import com.silverhetch.horae.socket.SocketDevice;
+import com.silverhetch.horae.upnp.HoraeUPnPImpl;
 import javafx.scene.Scene;
 import javafx.scene.layout.StackPane;
 import javafx.stage.Stage;
+import org.fourthline.cling.UpnpServiceImpl;
 
-public class Application extends javafx.application.Application {
-    private final SocketDevice socketDevice;
+public class Application extends javafx.application.Application implements DeviceStatusListener{
+    private final Horae horae;
 
     public Application() {
-        this.socketDevice = new SocketConnectionImpl().server(8912, new MessageListener() {
-            @Override
-            public void onReceive(String message) {
-                socketDevice.sendMessage("This is response of " + message);
-            }
-        });
+        this.horae = new HoraeImpl(new HoraeUPnPImpl(new UpnpServiceImpl()),this);
+    }
+
+    @Override
+    public void onStatusChanged(DeviceStatus deviceStatus) {
+
     }
 
     @Override
     public void init() throws Exception {
         super.init();
-        socketDevice.launch();
+        horae.launch();
     }
 
     @Override
     public void stop() throws Exception {
         super.stop();
-        socketDevice.shutdown();
+        horae.shutdown();
     }
 
     @Override
