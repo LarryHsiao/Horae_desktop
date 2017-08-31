@@ -8,6 +8,8 @@ import javafx.scene.Scene;
 import javafx.stage.Stage;
 import org.fourthline.cling.UpnpServiceImpl;
 
+import java.awt.*;
+import java.net.MalformedURLException;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
@@ -16,7 +18,23 @@ public class Application extends javafx.application.Application implements Devic
     private final Main main;
 
     public Application() {
-        this.horae = new HoraeImpl(new HoraeUPnPImpl(new UpnpServiceImpl()), this);
+        this.horae = new HoraeImpl(new HoraeUPnPImpl(new UpnpServiceImpl()), new LogImpl(), this, new MessageHandle() {
+            @Override
+            public int messageType() {
+                return 8912;
+            }
+
+            @Override
+            public void onReceive(String s) {
+                try {
+                    displayTray(s);
+                } catch (AWTException e) {
+                    e.printStackTrace();
+                } catch (MalformedURLException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
         this.main = new Main();
     }
 
@@ -49,5 +67,22 @@ public class Application extends javafx.application.Application implements Devic
 
     public static void main(String[] args) {
         launch(args);
+    }
+
+    public void displayTray(String message) throws AWTException, java.net.MalformedURLException {
+        //Obtain only one instance of the SystemTray object
+        SystemTray tray = SystemTray.getSystemTray();
+
+        //If the icon is a file
+        Image image = Toolkit.getDefaultToolkit().createImage("icon.png");
+        //Alternative (if the icon is on the classpath):
+        //Image image = Toolkit.getToolkit().createImage(getClass().getResource("icon.png"));
+        TrayIcon trayIcon = new TrayIcon(image, "Tray Demo");
+        //Let the system resizes the image if needed
+        trayIcon.setImageAutoSize(true);
+        //Set tooltip text for the tray icon
+        trayIcon.setToolTip("System tray icon demo");
+        tray.add(trayIcon);
+        trayIcon.displayMessage("Hello, World", message, TrayIcon.MessageType.INFO);
     }
 }
