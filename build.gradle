@@ -5,6 +5,10 @@ apply plugin: 'java'
 
 sourceCompatibility = 1.8
 
+configurations{
+    jar.archiveName = 'release.jar'
+}
+
 repositories {
     mavenCentral()
     maven {
@@ -13,6 +17,16 @@ repositories {
 
     maven {
         url "http://4thline.org/m2"
+    }
+}
+
+jar{
+    manifest{
+        attributes 'Main-Class': 'com.silverhetch.horae.Application'
+    }
+
+    from {
+        configurations.compile.collect { it.isDirectory() ? it : zipTree(it) }
     }
 }
 

@@ -17,7 +17,7 @@ public class Main implements Initializable, DeviceStatusListener {
     private ResourceBundle bundle;
 
     @Override
-    public void initialize(URL location, ResourceBundle resources) {
+    public void initialize(URL  location, ResourceBundle resources) {
         this.bundle = resources;
     }
 
